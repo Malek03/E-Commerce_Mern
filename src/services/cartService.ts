@@ -92,3 +92,41 @@ export const updateitemInCart=async({productId,
     const updateCart=await cart.save();
     return { data: updateCart, statusCode: 200 };
 }
+
+
+interface RemoveItemToCart {
+    productId: any;
+    userId: string;
+    }
+
+
+
+export const removeitemInCart=async({productId,
+    userId,
+    }: RemoveItemToCart)=>{
+        const cart = await getActiveCartForUser({ userId });
+        const existsInCart = cart.items.find((p) => p.product.toString() === productId);
+        if (!existsInCart) {
+            return { data: "Item dose not exists in cart!", statusCode: 400 };
+        }
+        const otherCartlItems=cart.items.filter((p)=>p.product.toString() !== productId)
+        cart.items=otherCartlItems;
+        let total=existsInCart.quantity*existsInCart.unitPrice;
+        cart.totalAmount -=total;
+        const updateCart=await cart.save();
+        return { data: updateCart, statusCode: 200 };
+    }
+
+
+
+interface ClearCart{
+    userId:string;
+}
+export const clearCart=async(
+    {userId}:ClearCart)=>{
+        const cart = await getActiveCartForUser({ userId });
+        cart.items=[]
+        cart.totalAmount=0;
+        const updateCart=await cart.save();
+        return { data: updateCart, statusCode: 200 };
+    }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { additemToCart,updateitemInCart, getActiveCartForUser } from '../services/cartService';
+import { additemToCart,updateitemInCart,removeitemInCart,clearCart, getActiveCartForUser } from '../services/cartService';
 import vaildateJWT from '../middlewares/validateJWT';
 import {ExtendRequest} from '../types/extendedRequest';
 
@@ -24,6 +24,19 @@ router.put('/items',vaildateJWT,async (req:ExtendRequest,res)=>{
     const userId=req?.user?._id;
     const {productId,quantity}=req.body;
     const response=await updateitemInCart({productId,quantity,userId});
+    res.status(response.statusCode).send(response.data);
+});
+
+router.delete('/items/:productId',vaildateJWT,async (req:ExtendRequest,res)=>{
+    const userId=req?.user?._id;
+    const {productId}=req.params;
+    const response=await removeitemInCart({productId,userId});
+    res.status(response.statusCode).send(response.data);
+});
+
+router.delete('/',vaildateJWT,async (req:ExtendRequest,res)=>{
+    const userId=req?.user?._id;
+    const response=await clearCart({userId});
     res.status(response.statusCode).send(response.data);
 });
 export default router;
