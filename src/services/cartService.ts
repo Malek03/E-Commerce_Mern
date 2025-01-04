@@ -52,8 +52,43 @@ import productModel from "../models/productModel";
         quantity
     });
     cart.totalAmount += product.price * quantity;
-    product.stock -= quantity;
     product.save();
     const updateCart = await cart.save();
     return { data: updateCart, statusCode: 200 };
-    };
+    }
+
+//كررنا البيانات عشان اذا احتجنا تعديل بيانات التحديث فقط
+interface UpdateItemToCart {
+        productId: any;
+        quantity: number;
+        userId: string;
+        }
+
+
+export const updateitemInCart=async({productId,
+    quantity,
+    userId,
+    }: UpdateItemToCart)=>{
+        const cart = await getActiveCartForUser({ userId });
+        const existsInCart = cart.items.find((p) => p.product.toString() === productId);
+        if (!existsInCart) {
+            return { data: "Item dose not exists in cart!", statusCode: 400 };
+        }
+        const product = await productModel.findById(productId);
+        if (!product) {
+            return { data: "Product not found!", statusCode: 400 };
+        }
+        if(product.stock < quantity){
+            return { data: "Low Stock For Item!", statusCode: 400 };
+        }
+        const otherCartlItems=cart.items.filter((p)=>p.product.toString() !== productId)
+        let total=otherCartlItems.reduce((sum,product)=>{
+            sum +=product.quantity*product.unitPrice;
+            return sum;
+        },0);
+    existsInCart.quantity=quantity;
+    total+=existsInCart.quantity*existsInCart.unitPrice;
+    cart.totalAmount=total;
+    const updateCart=await cart.save();
+    return { data: updateCart, statusCode: 200 };
+}
