@@ -1,14 +1,11 @@
-import{Request,Response,NextFunction} from "express";
+import{Response,NextFunction} from "express";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel";
-
+import {ExtendRequest} from '../types/extendedRequest';
 //لان متغير user ليس موجود على req كما استدعيناه بسطر 33 فنقوم بعمل التالي
 
-export interface ExtendRequest extends Request{
-    user?: any;
-}
 
-export const vaildateJWT=(req:ExtendRequest,res:Response,next:NextFunction)=>{
+const vaildateJWT=(req:ExtendRequest,res:Response,next:NextFunction)=>{
     const authorizationHeader=req.get('authorization');
     if(!authorizationHeader){
         res.status(403).send('Authorization header was not provided');
@@ -38,3 +35,4 @@ export const vaildateJWT=(req:ExtendRequest,res:Response,next:NextFunction)=>{
         next();//يعني انتهت MiddleWare ولان نفذ الدالة التالية
     });
 }
+export default vaildateJWT;
