@@ -3,18 +3,21 @@ import HomePage from "./pages/HomePage"
 import RegisterPage from "./pages/RegisterPage"
 import NavBar from "./components/Bar"
 import LoginPage from "./pages/LoginPage"
+import AuthProvider from "./context/Auth/AuthProvider"
 
 function App() {
   return (
-    <BrowserRouter>
+    // # Shared State To All App Range
+    <AuthProvider>
+      <BrowserRouter>
         <NavBar/>
-      <Routes>
-        <Route path='/' element={<HomePage />}></Route>
-        <Route path='/register' element={<RegisterPage/>}></Route>
-        <Route path='/login' element={<LoginPage/>}></Route>
-      </Routes>
-    </BrowserRouter>
-
+        <Routes>
+          <Route path='/' element={<HomePage />}></Route>
+          <Route path='/register' element={<RegisterPage/>}></Route>
+          <Route path='/login' element={<LoginPage/>}></Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
