@@ -9,6 +9,7 @@ import { seedInitialProducts } from "./services/productService";
 
 dotenv.config();
 const app = express();
+const cors = require('cors');
 const port = 3001;
 
 mongoose
@@ -18,6 +19,7 @@ mongoose
     console.log("Faild To Connection !", err);
   });
 
+app.use(cors());
 app.use(express.json())
 app.use('/user',userRoute)
 app.use('/product',productRoute)

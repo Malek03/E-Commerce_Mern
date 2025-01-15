@@ -37,7 +37,7 @@ export const login = async ({ email, password }: LoginParams) => {
   if (passwordMatch) {
     return { data: generateJWT({firstName:findUser.firstName, lastName:findUser.lastName, email}), statusCode: 200 };
   } else {
-    return { data: "Incorrect email or password!", statusCode: 400 };
+    return { data: "Incorrect password!", statusCode: 400 };
   }
 };
 

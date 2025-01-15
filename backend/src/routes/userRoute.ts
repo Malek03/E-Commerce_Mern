@@ -12,7 +12,7 @@ router.post("/register", async (req, res) => {
       email,
       password,
     });
-    res.status(statusCode).send(data);
+    res.status(statusCode).json(data);
   }catch(err){
     res.status(500).send("Some Thing Get Rong!!")
 }
