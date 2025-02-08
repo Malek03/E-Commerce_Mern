@@ -16,10 +16,10 @@ import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 
-const settings = ['My Orders', 'Logout'];
+
 
 function NavBar() {
-  const {username,isAuthenticated}=useAuth();
+  const {username,isAuthenticated,logout}=useAuth();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate=useNavigate();
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -32,6 +32,11 @@ function NavBar() {
   };
   const goTo=()=>{
     navigate('/login');
+  }
+  const handlLogOut=()=>{
+    logout();
+    navigate('/');
+    handleCloseUserMenu();
   }
   return (
     <AppBar position="static">
@@ -86,11 +91,12 @@ function NavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                <MenuItem  onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: 'center' }}>My Orders</Typography>
                 </MenuItem>
-              ))}
+                <MenuItem onClick={handlLogOut}>
+                  <Typography sx={{ textAlign: 'center' }}>LogOut</Typography>
+                </MenuItem>
             </Menu></>:<Button variant='contained' color="success" onClick={goTo}>Login</Button>}
           </Box>
           </Box>
