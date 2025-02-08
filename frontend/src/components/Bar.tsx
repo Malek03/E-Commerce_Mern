@@ -10,10 +10,12 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import { useAuth } from '../context/Auth/AuthContext';
 import Grid from '@mui/material/Grid';
-import { Button } from '@mui/material';
+import { Badge, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -37,6 +39,9 @@ function NavBar() {
     logout();
     navigate('/');
     handleCloseUserMenu();
+  }
+  const handleCart=()=>{
+    navigate('/cart');
   }
   return (
     <AppBar position="static">
@@ -62,12 +67,16 @@ function NavBar() {
             Uni Tech
           </Typography>
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            {isAuthenticated?<>            <Tooltip title="Open settings">
+          <Box sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:"center" }} gap={4}>
+            <IconButton aria-label='cart' onClick={handleCart}>
+              <Badge badgeContent={4} color="secondary">
+                <ShoppingCart sx={{color:'#ffffff'}}/>
+              </Badge>
+            </IconButton>
+            {isAuthenticated?
+            <>
+            <Tooltip title="Open settings">
               <Grid container alignItems="center" justifyContent="center" gap={2}>
-                <Grid item>
-              <Typography>{username}</Typography>
-              </Grid>
               <Grid item>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt={username||''} src="/static/images/avatar/2.jpg" />

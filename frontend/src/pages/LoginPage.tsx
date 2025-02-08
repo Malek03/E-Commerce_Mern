@@ -53,7 +53,7 @@ const LoginPage=()=>{
                 <Box sx={{ display: "flex", flexDirection: 'column', gap: 2, border: 1, p: 2, borderColor: '#f5f5f5' }}>
                     <TextField inputRef={emailRef} type="email" label="Email" name="email"></TextField>
                     <TextField inputRef={passwordRef} type="password" label="Password" name="password"></TextField>
-                    <Button variant="contained" onClick={onSubmit}>Register</Button>
+                    <Button variant="contained" onClick={onSubmit}>Login</Button>
                     {err && <Typography sx={{color:'red;'}}>{err}</Typography>}
                     {done && <Typography sx={{color:'Green;'}}>{done}</Typography>}
                 </Box>

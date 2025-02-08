@@ -15,7 +15,7 @@ const vaildateJWT=(req:ExtendRequest,res:Response,next:NextFunction)=>{
     if(!token){//!token =>token===undefined||token===null||token===''
         res.status(403).send('Bearer token not found!')
     }
-    jwt.verify(token,process.env.JWT_SECRETKEY||' ',async(err,payload)=>{
+    jwt.verify(token,process.env.JWT_SECRET||' ',async(err,payload)=>{
         if(err){
             res.status(401).send("Invalid token");
             return;
