@@ -13,11 +13,18 @@ import productModel from "../models/productModel";
 
     interface GetActiveCartForUser {
     userId: string;
+    populateProduct?:boolean;
     }
     export const getActiveCartForUser = async ({
     userId,
+    populateProduct
     }: GetActiveCartForUser) => {
-    let cart = await cartModel.findOne({ userId, status: "active" });
+    let cart;
+    if(populateProduct){
+        cart= await cartModel.findOne({ userId, status: "active" }).populate('items.product');
+    }else{
+        cart= await cartModel.findOne({ userId, status: "active" });
+    }
     if (!cart) {
         cart = await createCartForUser({ userId });
     }
@@ -35,7 +42,7 @@ import productModel from "../models/productModel";
     quantity,
     userId,
     }: AddItemToCart) => {
-    const cart = await getActiveCartForUser({ userId });
+    const cart = await getActiveCartForUser({ userId ,populateProduct:true});
     const existsInCart = cart.items.find((p) => p.product.toString() === productId);
     if (existsInCart) {
         return { data: "Item aleardy exists in cart!", statusCode: 400 };
@@ -54,8 +61,8 @@ import productModel from "../models/productModel";
     });
     cart.totalAmount += product.price * quantity;
     product.save();
-    const updateCart = await cart.save();
-    return { data: updateCart, statusCode: 200 };
+    await cart.save();
+    return { data:await getActiveCartForUser({userId,populateProduct:true}), statusCode: 200 };
     }
 
 //كررنا البيانات عشان اذا احتجنا تعديل بيانات التحديث فقط
@@ -90,8 +97,8 @@ export const updateitemInCart=async({productId,
     existsInCart.quantity=quantity;
     total+=existsInCart.quantity*existsInCart.unitPrice;
     cart.totalAmount=total;
-    const updateCart=await cart.save();
-    return { data: updateCart, statusCode: 200 };
+    await cart.save();
+    return { data:await getActiveCartForUser({userId,populateProduct:true}), statusCode: 200 };
 }
 
 
@@ -114,8 +121,8 @@ export const removeitemInCart=async({productId,
         cart.items=otherCartlItems;
         let total=existsInCart.quantity*existsInCart.unitPrice;
         cart.totalAmount -=total;
-        const updateCart=await cart.save();
-        return { data: updateCart, statusCode: 200 };
+        cart.save();
+        return { data:await getActiveCartForUser({userId,populateProduct:true}), statusCode: 200 };
     }
 
 
