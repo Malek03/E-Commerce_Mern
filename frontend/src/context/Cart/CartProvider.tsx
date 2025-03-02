@@ -22,10 +22,10 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
                 });
                 const data=await response.json();
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const cartItemsMappded=data.items.map(({product,quantity}:{product:any,quantity:any})=>(
+                const cartItemsMappded=data.items.map(({product,quantity,unitPrice}:{product:any,quantity:any,unitPrice:number})=>(
                     {productId:product._id,
                     title:product.title,
-                    price:product.unitPrice,
+                    price:unitPrice,
                     productImage:product.image,
                     quantity:quantity}))
                 setCartItems(cartItemsMappded);
@@ -56,13 +56,13 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
                 setError('Failde to Parse cart data')
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const cartItemsMappded=cart.items.map(({product,quantity}:{product:any,quantity:any})=>(
+            const cartItemsMappded=cart.items.map(({product,quantity,unitPrice}:{product:any,quantity:number,unitPrice:number})=>(
                 {productId:product._id,
                 title:product.title,
-                price:product.unitPrice,
+                price:unitPrice,
                 productImage:product.image,
                 quantity:quantity}))
-            setCartItems([...cartItemsMappded,]);
+            setCartItems(cartItemsMappded);
             setTotalAmount(cart.totalAmount);
         }catch{
             console.error(error);

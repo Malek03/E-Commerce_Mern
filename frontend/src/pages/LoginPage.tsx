@@ -46,6 +46,9 @@ const LoginPage=()=>{
         navigate('/');
         setdone('Incorrect email or password!');
     }
+    const regAccount=()=>{
+        navigate('/register');
+    }
     return(
         <Container>
             <Box sx={{ display: "flex", justifyContent: 'center', flexDirection: 'column', alignItems: 'center', mt: 4}}>
@@ -54,6 +57,7 @@ const LoginPage=()=>{
                     <TextField inputRef={emailRef} type="email" label="Email" name="email"></TextField>
                     <TextField inputRef={passwordRef} type="password" label="Password" name="password"></TextField>
                     <Button variant="contained" onClick={onSubmit}>Login</Button>
+                    <Button variant="contained" onClick={regAccount}>Register</Button>
                     {err && <Typography sx={{color:'red;'}}>{err}</Typography>}
                     {done && <Typography sx={{color:'Green;'}}>{done}</Typography>}
                 </Box>
