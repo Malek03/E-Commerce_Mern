@@ -2,7 +2,15 @@ import { Box, ButtonGroup,Button, Container, Typography } from "@mui/material";
 import { useCart } from "../context/Cart/CartContext";
 
 const CartPage=()=>{
-    const {cartItems,totalAmount}=useCart();
+    const {cartItems,totalAmount,updateItemCart,deleteItemCart}=useCart();
+    const handleQuantity=(productId:string,quantity:number)=>{
+        if(quantity<=0)
+            return;
+        updateItemCart(productId,quantity)
+    }
+    const removeItem=(productId:string)=>{
+        deleteItemCart(productId)
+    }
     return(
         <Container  sx={{mt:2}}>
             <Typography variant="h4">My Cart</Typography>
@@ -14,17 +22,17 @@ const CartPage=()=>{
                     <Box>
                     <Typography variant="h6">{items.title}</Typography>
                     <Typography>{items.quantity}X{items.price}$</Typography>
-                    <Button>Remove Item</Button>
+                    <Button onClick={()=>removeItem(items.productId)}>Remove Item</Button>
                     </Box>
                     </Box>
                     <ButtonGroup variant="contained" >
-                        <Button >+</Button>
-                        <Button >-</Button>
+                        <Button onClick={()=>handleQuantity(items.productId,items.quantity+1)}>+</Button>
+                        <Button onClick={()=>handleQuantity(items.productId,items.quantity-1)}>-</Button>
                     </ButtonGroup>
                 </Box>
             ))}
             <Box>
-                <Typography variant="h4">Total Amount:{totalAmount}</Typography>
+                <Typography variant="h4">Total Amount:{totalAmount}$</Typography>
                 </Box>
             </Box>
         </Container>

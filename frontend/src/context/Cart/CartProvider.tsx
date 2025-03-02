@@ -57,7 +57,8 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const cartItemsMappded=cart.items.map(({product,quantity,unitPrice}:{product:any,quantity:number,unitPrice:number})=>(
-                {productId:product._id,
+                {
+                productId:product._id,
                 title:product.title,
                 price:unitPrice,
                 productImage:product.image,
@@ -67,9 +68,73 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
         }catch{
             console.error(error);
         }
+    };
+    const updateItemCart=async(productId:string,quantity:number)=>{
+        try{
+            const response=await fetch(`${BASE_URL}/cart/items`,{
+                method:"PUT",
+                headers:{
+                    'Content-Type':'application/json',
+                    'Authorization':`Bearer ${token}`
+                },
+                body:JSON.stringify({
+                    productId,
+                    quantity
+                })
+            });
+            if(!response.ok){
+                setError("Faild To Update Data !!");
+            }
+            const cart=await response.json();
+            if(!cart){
+                setError("Faild To Parse Data !!")
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const cartItemsMapped=cart.items.map(({product,quantity,unitPrice}:{product:any,quantity:number,unitPrice:number})=>({
+                productId:product._id,
+                title:product.title,
+                price:unitPrice,
+                productImage:product.image,
+                quantity:quantity
+            }));
+            setCartItems([...cartItemsMapped]);
+            setTotalAmount(cart.totalAmount);
+        }catch{
+            console.error(error);
+        }
+    }
+    const deleteItemCart=async(productId:string)=>{
+        try{
+            const response=await fetch(`${BASE_URL}/cart/items/${productId}`,{
+                method:"DELETE",
+                headers:{
+                    'Authorization':`Bearer ${token}`
+                }
+            });
+            if(!response){
+                setError("Faild To Delete Data !!");
+            }
+            const cart=await response.json();
+            if(!cart){
+                setError("Faild To Parse Data !!")
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const cartItemsMapped=cart.items.map(({product,quantity,unitPrice}:{product:any,quantity:number,unitPrice:number})=>({
+                productId:product._id,
+                title:product.title,
+                price:unitPrice,
+                productImage:product.image,
+                quantity:quantity
+            }));
+            setCartItems([...cartItemsMapped]);
+            setTotalAmount(cart.totalAmount);
+        }catch{
+            console.error(error)
+    }
+
     }
     return(
-        <CartContext.Provider value={{cartItems,totalAmount,addItemToCart}}>
+        <CartContext.Provider value={{cartItems,totalAmount,addItemToCart,updateItemCart,deleteItemCart}}>
             {children}
         </CartContext.Provider>
     );
