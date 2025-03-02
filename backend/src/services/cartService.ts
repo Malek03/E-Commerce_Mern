@@ -42,7 +42,7 @@ import productModel from "../models/productModel";
     quantity,
     userId,
     }: AddItemToCart) => {
-    const cart = await getActiveCartForUser({ userId ,populateProduct:true});
+    const cart = await getActiveCartForUser({ userId});
     const existsInCart = cart.items.find((p) => p.product.toString() === productId);
     if (existsInCart) {
         return { data: "Item aleardy exists in cart!", statusCode: 400 };

@@ -1,4 +1,4 @@
-import { PropsWithChildren ,FC, useState} from "react";
+import { PropsWithChildren ,FC, useState,useEffect} from "react";
 import {CartContext} from "./CartContext"
 import { CartItem } from "../../types/CartItem";
 import { BASE_URL } from "../../constants/baseUrl";
@@ -9,6 +9,32 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
     const [totalAmount,setTotalAmount]=useState<number>(0);
     const [error,setError]=useState('');
     const {token}=useAuth();
+    useEffect(()=>{
+        if(!token){
+            return;
+        }
+        const fetched=async()=>{
+            try{
+                const response=await fetch(`${BASE_URL}/cart`,{
+                    headers:{
+                        'Authorization':`Bearer ${token}`
+                    }
+                });
+                const data=await response.json();
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const cartItemsMappded=data.items.map(({product,quantity}:{product:any,quantity:any})=>(
+                    {productId:product._id,
+                    title:product.title,
+                    price:product.unitPrice,
+                    productImage:product.image,
+                    quantity:quantity}))
+                setCartItems(cartItemsMappded);
+            }catch{
+                setError('Failed to add to cart');
+            }
+        }
+        fetched();
+    },[token]);
     const addItemToCart=async(productId:string)=>{
         try{
             const response=await fetch(`${BASE_URL}/cart/items`,{
@@ -38,7 +64,7 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
                 quantity:quantity}))
             setCartItems([...cartItemsMappded,]);
             setTotalAmount(cart.totalAmount);
-        }catch(error){
+        }catch{
             console.error(error);
         }
     }
@@ -49,3 +75,4 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
     );
 }
 export default CartProvider;
+

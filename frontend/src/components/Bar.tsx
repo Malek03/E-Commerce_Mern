@@ -15,6 +15,7 @@ import { useAuth } from '../context/Auth/AuthContext';
 import Grid from '@mui/material/Grid';
 import { Badge, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/Cart/CartContext';
 
 
 
@@ -22,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 
 function NavBar() {
   const {username,isAuthenticated,logout}=useAuth();
+  const {cartItems}=useCart();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate=useNavigate();
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -43,13 +45,16 @@ function NavBar() {
   const handleCart=()=>{
     navigate('/cart');
   }
+  const home=()=>{
+    navigate('/');
+  }
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
             <Box sx={{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:'center ',width:"100%"}}>
             <Box sx={{display:"flex",flexDirection:"row",alignItems:'center'}}>
-          <AdbIcon sx={{ display: "flex", mr: 1 }} />
+          <AdbIcon sx={{ display: "flex", mr: 1 }} onClick={home}/>
           <Typography
             variant="h6"
             noWrap
@@ -69,7 +74,7 @@ function NavBar() {
           </Box>
           <Box sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:"center" }} gap={4}>
             <IconButton aria-label='cart' onClick={handleCart}>
-              <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={cartItems.length} color="secondary">
                 <ShoppingCart sx={{color:'#ffffff'}}/>
               </Badge>
             </IconButton>
