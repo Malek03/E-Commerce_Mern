@@ -7,6 +7,7 @@ import AuthProvider from "./context/Auth/AuthProvider"
 import CartPage from "./pages/CartPage"
 import ProtecetedRoute from "./components/ProtecedRoute"
 import CartProvider from "./context/Cart/CartProvider"
+import CheckoutPage from "./pages/CheckoutPage"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path='/login' element={<LoginPage/>}></Route>
           <Route element={<ProtecetedRoute/>}> /* ProtecetedRoute is A Component Work As MiddleWare*/
               <Route path='/cart' element={<CartPage/>}></Route>
+              <Route path='/checkout' element={<CheckoutPage/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

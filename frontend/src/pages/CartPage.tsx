@@ -1,10 +1,11 @@
 import { Box, ButtonGroup,Button, Container, Typography } from "@mui/material";
 import { useCart } from "../context/Cart/CartContext";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const CartPage=()=>{
     const {cartItems,totalAmount,updateItemCart,deleteItemCart,deleteAll}=useCart();
     const [empty,setEmpty]=useState<boolean>(true);
+    const navigate=useNavigate();
     const handleQuantity=(productId:string,quantity:number)=>{
         if(quantity<=0)
             return;
@@ -18,6 +19,9 @@ const CartPage=()=>{
     const removeAllItem=()=>{
         deleteAll();
         setEmpty(false);
+    }
+    const handleCheckOut=()=>{
+        navigate('/checkout');
     }
     return(
         <Container fixed sx={{mt:2}}>
@@ -45,9 +49,10 @@ const CartPage=()=>{
                     </ButtonGroup>
                 </Box>
             ))}
-            <Box>
+            <Box display='flex' flexDirection='row' justifyContent='space-between'>
                 <Typography variant="h4">Total Amount:{totalAmount}$</Typography>
-                </Box>
+                <Button variant="contained" onClick={handleCheckOut}>Go To Checkout</Button>
+            </Box>
             </Box>:<Typography variant="h4">Cart is Empty Please Start To Shopping</Typography>
             }
         </Container>
