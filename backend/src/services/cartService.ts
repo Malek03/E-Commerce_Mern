@@ -119,9 +119,8 @@ export const removeitemInCart=async({productId,
         }
         const otherCartlItems=cart.items.filter((p)=>p.product.toString() !== productId)
         cart.items=otherCartlItems;
-        let total=existsInCart.quantity*existsInCart.unitPrice;
-        cart.totalAmount -=total;
-        cart.save();
+        cart.totalAmount = otherCartlItems.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+        await cart.save();
         return { data:await getActiveCartForUser({userId,populateProduct:true}), statusCode: 200 };
     }
 
@@ -135,8 +134,8 @@ export const clearCart=async(
         const cart = await getActiveCartForUser({ userId });
         cart.items=[]
         cart.totalAmount=0;
-        const updateCart=await cart.save();
-        return { data: updateCart, statusCode: 200 };
+        await cart.save();
+        return { data:await getActiveCartForUser({userId,populateProduct:true}), statusCode: 200 };
     }
 
 interface Checkout{

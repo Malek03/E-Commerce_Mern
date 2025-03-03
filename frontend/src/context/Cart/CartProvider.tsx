@@ -29,6 +29,7 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
                     productImage:product.image,
                     quantity:quantity}))
                 setCartItems(cartItemsMappded);
+                setTotalAmount(data.totalAmount);
             }catch{
                 setError('Failed to add to cart');
             }
@@ -133,8 +134,29 @@ const CartProvider: FC<PropsWithChildren>=({children})=>{
     }
 
     }
+    const deleteAll=async()=>{
+        try{
+            const response=await fetch(`${BASE_URL}/cart`,{
+                method:"DELETE",
+                headers:{
+                    'Authorization':`Bearer ${token}`
+                }
+            });
+            if(!response){
+                setError("Faild To Delete Data !!");
+            }
+            const cart=await response.json();
+            if(!cart){
+                setError("Faild To Parse Data !!")
+            }
+            setCartItems([]);
+            setTotalAmount(0);
+        }catch{
+            console.error(error)
+    }
+    }
     return(
-        <CartContext.Provider value={{cartItems,totalAmount,addItemToCart,updateItemCart,deleteItemCart}}>
+        <CartContext.Provider value={{cartItems,totalAmount,addItemToCart,updateItemCart,deleteItemCart,deleteAll}}>
             {children}
         </CartContext.Provider>
     );
